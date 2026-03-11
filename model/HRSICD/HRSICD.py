@@ -404,19 +404,12 @@ if __name__ == "__main__":
 
     print("开始测试带自适应通道门控融合的HRSICD...")
     print("模型结构:")
-    print(f"  - 自适应通道门控融合模块: {model.gate_fusion64}")
-    print(f"  - 参数量: {sum(p.numel() for p in model.parameters()):,}")
 
     # 测试前向传播
     output = model(x1, x2)
     print(f"\n输出形状: {output.shape}")
 
-    # 计算自适应门控模块的参数量
-    gate_params = sum(p.numel() for p in model.gate_fusion64.parameters())
-    gate_params += sum(p.numel() for p in model.gate_fusion128.parameters())
-    gate_params += sum(p.numel() for p in model.gate_fusion256.parameters())
-    gate_params += sum(p.numel() for p in model.gate_fusion512.parameters())
-    print(f"自适应门控模块总参数量: {gate_params}")
+    
 
     # 验证梯度
     output.mean().backward()
@@ -440,4 +433,5 @@ if __name__ == "__main__":
         if weight_diff > 0.001:
             print("✓ 自适应门控机制正常工作：不同输入产生不同的权重")
         else:
+
             print("⚠ 注意：门控权重可能没有充分自适应")
